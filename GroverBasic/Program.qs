@@ -13,60 +13,14 @@
 
     @EntryPoint()
     operation Main() : Unit {
-        let result = TwoQubitFixedSearch();
-        Message($"Expected to find a fixed: 2, found: {result}");
-
         for i in 0..3 {
             let found = TwoQubitGenericSearch(i);
             Message($"Expected to find: {i}, found: {found}");
         }
     }
 
-    // 2 is marked
-    operation TwoQubitFixedSearch() : Int {
-        use (q1, q2) = (Qubit(), Qubit());
-
-        // superposition
-        H(q1);
-        H(q2);
-        DumpMachine();
-
-        // CPHASE or CR(π), only flips the phase of |11>
-        CZ(q1, q2);
-        DumpMachine();
-
-        // swap phase change to state -|10>
-        X(q1);
-        DumpMachine();
-
-        // invert about the mean
-        H(q1);
-        H(q2);
-        DumpMachine();
-
-        X(q1);
-        X(q2);
-        DumpMachine();
-
-        CZ(q1, q2);
-        DumpMachine();
-
-        X(q1);
-        X(q2);
-        DumpMachine();
-
-        H(q1);
-        H(q2);
-
-        DumpMachine();
-
-        let register = LittleEndian([q1, q2]);
-        let number = MeasureInteger(register);
-        return number;
-    }    
-
     operation TwoQubitGenericSearch(markIndex : Int) : Int {
-        use qubits = Qubit[2];
+        use qubits = Qubit[2]; 
 
         // superposition
         ApplyToEachA(H, qubits);
